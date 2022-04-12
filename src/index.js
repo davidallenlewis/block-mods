@@ -1,2 +1,2 @@
 import './filters/button-size';
-import './filters/cover-alignment';
+import './filters/video-background';

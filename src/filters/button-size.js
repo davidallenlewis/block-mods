@@ -1,8 +1,5 @@
-/* eslint-disable react/jsx-props-no-spreading, react/prop-types */
 import classnames from 'classnames';
-
 const { assign, merge } = lodash;
-
 const { __ } = wp.i18n;
 const { addFilter } = wp.hooks;
 const { createHigherOrderComponent } = wp.compose;
@@ -30,7 +27,6 @@ function addAttributes(settings, name) {
 	}
 	return settings;
 }
-
 addFilter(
 	'blocks.registerBlockType',
 	'intro-to-filters/button-block/add-attributes',
@@ -47,16 +43,14 @@ const addInspectorControl = createHigherOrderComponent((BlockEdit) => {
 			setAttributes,
 			name,
 		} = props;
-
 		if (name !== 'core/button') {
 			return <BlockEdit {...props} />;
 		}
-
 		return (
 			<Fragment>
 				<BlockEdit {...props} />
 				<InspectorControls>
-					<PanelBody title={__('Size settings', 'intro-to-filters')} initialOpen={false}>
+					<PanelBody title={__('Size settings', 'intro-to-filters')} initialOpen={true}>
 						<SelectControl
 							label={__('Size', 'intro-to-filters')}
 							value={size}
@@ -69,10 +63,6 @@ const addInspectorControl = createHigherOrderComponent((BlockEdit) => {
 									label: __('Small', 'intro-to-filters'),
 									value: 'small',
 								},
-								{
-									label: __('Large', 'intro-to-filters'),
-									value: 'large',
-								},
 							]}
 							onChange={(value) => {
 								setAttributes({ size: value });
@@ -84,7 +74,6 @@ const addInspectorControl = createHigherOrderComponent((BlockEdit) => {
 		);
 	};
 }, 'withInspectorControl');
-
 addFilter(
 	'editor.BlockEdit',
 	'intro-to-filters/button-block/add-inspector-controls',
@@ -114,7 +103,6 @@ const addSizeClassEditor = createHigherOrderComponent((BlockListBlock) => {
 		);
 	};
 }, 'withClientIdClassName');
-
 addFilter(
 	'editor.BlockListBlock',
 	'intro-to-filters/button-block/add-editor-class',
@@ -133,10 +121,8 @@ function addSizeClassFrontEnd(props, block, attributes) {
 	if (block.name !== 'core/button') {
 		return props;
 	}
-
 	const { className } = props;
 	const { size } = attributes;
-
 	return assign({}, props, {
 		className: classnames(className, size ? `has-size-${size}` : ''),
 	});
