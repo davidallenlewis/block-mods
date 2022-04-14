@@ -29,7 +29,7 @@ function addAttributes(settings, name) {
 }
 addFilter(
 	'blocks.registerBlockType',
-	'intro-to-filters/button-block/add-attributes',
+	'block-mods/button-block/add-attributes',
 	addAttributes,
 );
 
@@ -50,17 +50,17 @@ const addInspectorControl = createHigherOrderComponent((BlockEdit) => {
 			<Fragment>
 				<BlockEdit {...props} />
 				<InspectorControls>
-					<PanelBody title={__('Size settings', 'intro-to-filters')} initialOpen={true}>
+					<PanelBody title={__('Size settings', 'block-mods')} initialOpen={true}>
 						<SelectControl
-							label={__('Size', 'intro-to-filters')}
+							label={__('Size', 'block-mods')}
 							value={size}
 							options={[
 								{
-									label: __('Regular', 'intro-to-filters'),
+									label: __('Regular', 'block-mods'),
 									value: 'regular',
 								},
 								{
-									label: __('Small', 'intro-to-filters'),
+									label: __('Small', 'block-mods'),
 									value: 'small',
 								},
 							]}
@@ -76,7 +76,7 @@ const addInspectorControl = createHigherOrderComponent((BlockEdit) => {
 }, 'withInspectorControl');
 addFilter(
 	'editor.BlockEdit',
-	'intro-to-filters/button-block/add-inspector-controls',
+	'block-mods/button-block/add-inspector-controls',
 	addInspectorControl,
 );
 
@@ -105,7 +105,7 @@ const addSizeClassEditor = createHigherOrderComponent((BlockListBlock) => {
 }, 'withClientIdClassName');
 addFilter(
 	'editor.BlockListBlock',
-	'intro-to-filters/button-block/add-editor-class',
+	'block-mods/button-block/add-editor-class',
 	addSizeClassEditor,
 );
 
@@ -128,9 +128,9 @@ function addSizeClassFrontEnd(props, block, attributes) {
 	});
 }
 
-// Comment out to test the PHP approach defined in intro-to-block-filters.php
+// Comment out to test the PHP approach defined in block-mods.php
 addFilter(
 	'blocks.getSaveContent.extraProps',
-	'intro-to-filters/button-block/add-front-end-class',
+	'block-mods/button-block/add-front-end-class',
 	addSizeClassFrontEnd,
 );

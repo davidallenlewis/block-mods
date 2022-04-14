@@ -1,9 +1,12 @@
-# Intro to Block Filters
-A demo WordPress plugin to demo WordPress block filters. It does two things:
-- Removes all alignment options from Cover block except 'full' alignment
-- Adds size selector to core button block
+# Block Mods
+A WordPress plugin that modifies and extends native Gutenberg Block functionality:
+- Adds gradient backgrounds to core/video block
+- Adds size selector to core/button block
+- Adds column options to core/list block
 
 ## Installation
 - Pull the plugin repo to `wp-content/plugins` folder of your WordPress site
 - Navigate to plugin folder in command line and run `npm install && npm run build`
-- In WordPress dashboard go to _Plugins_ and click _Activate_ under _Intro to Block Filters_
+
+## Usage Notes
+- Plugin only adds classes (as needed). Any necessary styling is left up to the theme.
