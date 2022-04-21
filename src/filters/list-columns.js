@@ -1,4 +1,6 @@
 import classnames from 'classnames';
+import { Button, ButtonGroup } from '@wordpress/components';
+
 const { assign, merge } = lodash;
 const { __ } = wp.i18n;
 const { addFilter } = wp.hooks;
@@ -8,19 +10,19 @@ const { InspectorControls } = wp.blockEditor;
 const { PanelBody, SelectControl } = wp.components;
 
 /**
- * Add Size attribute to Button block
+ * Add columns attribute to Button block
  *
  * @param  {Object} settings Original block settings
  * @param  {string} name     Block name
  * @return {Object}          Filtered block settings
  */
 function addAttributes(settings, name) {
-	if (name === 'core/button') {
+	if (name === 'core/list') {
 		return assign({}, settings, {
 			attributes: merge(settings.attributes, {
-				size: {
+				columns: {
 					type: 'string',
-					default: '',
+					default: '1',
 				},
 			}),
 		});
@@ -29,45 +31,43 @@ function addAttributes(settings, name) {
 }
 addFilter(
 	'blocks.registerBlockType',
-	'block-mods/button-block/add-attributes',
+	'block-mods/list-block/add-columns-attribute',
 	addAttributes,
 );
 
 /**
- * Add Size control to Button block
+ * Add Columns control to List block
  */
 const addInspectorControl = createHigherOrderComponent((BlockEdit) => {
 	return (props) => {
 		const {
-			attributes: { size },
+			attributes: { columns },
 			setAttributes,
 			name,
 		} = props;
-		if (name !== 'core/button') {
+		if (name !== 'core/list') {
 			return <BlockEdit {...props} />;
 		}
 		return (
 			<Fragment>
 				<BlockEdit {...props} />
 				<InspectorControls>
-					<PanelBody title={__('Size settings', 'block-mods')} initialOpen={true}>
-						<SelectControl
-							label={__('Size', 'block-mods')}
-							value={ size }
-							options={[
-								{
-									label: __('Regular', 'block-mods'),
-									value: 'regular',
-								},
-								{
-									label: __('Small', 'block-mods'),
-									value: 'small',
-								},
-							]}
-							onChange={ ( value ) => {
-								setAttributes({ size: value });
-							}}
-						/>
+					<PanelBody title={ __( 'Columns' ) }>
+						<ButtonGroup aria-label={ __( 'Columns' ) }>
+							{ [ "1", "2", "3", "4" ].map( ( columnValue ) => {
+								return (
+									<Button
+										key={ columnValue }
+										isPrimary={ columns === columnValue }
+										onClick={ ( key ) => {
+											setAttributes({ columns: columnValue });
+										}}
+									>
+										{ columnValue }
+									</Button>
+								);
+							} ) }
+						</ButtonGroup>
 					</PanelBody>
 				</InspectorControls>
 			</Fragment>
@@ -76,29 +76,29 @@ const addInspectorControl = createHigherOrderComponent((BlockEdit) => {
 }, 'withInspectorControl');
 addFilter(
 	'editor.BlockEdit',
-	'block-mods/button-block/add-inspector-controls',
+	'block-mods/list-block/add-inspector-controls',
 	addInspectorControl,
 );
 
 /**
- * Add size class to the block in the editor
+ * Add columns class to the block in the editor
  */
-const addSizeClassEditor = createHigherOrderComponent((BlockListBlock) => {
+const addColumnsClassEditor = createHigherOrderComponent((BlockListBlock) => {
 	return (props) => {
 		const {
-			attributes: { size },
+			attributes: { columns },
 			className,
 			name,
 		} = props;
 
-		if (name !== 'core/button') {
+		if (name !== 'core/list') {
 			return <BlockListBlock {...props} />;
 		}
 
 		return (
 			<BlockListBlock
 				{...props}
-				className={classnames(className, size ? `has-size-${size}` : '')}
+				className={classnames(className, columns ? `has-${columns}-columns` : '')}
 			/>
 		);
 	};
@@ -106,25 +106,26 @@ const addSizeClassEditor = createHigherOrderComponent((BlockListBlock) => {
 addFilter(
 	'editor.BlockListBlock',
 	'block-mods/button-block/add-editor-class',
-	addSizeClassEditor,
+	addColumnsClassEditor,
 );
 
 /**
- * Add size class to the block on the front end
+ * Add class to the block on the front end
  *
  * @param  {Object} props      Additional props applied to save element.
  * @param  {Object} block      Block type.
  * @param  {Object} attributes Current block attributes.
  * @return {Object}            Filtered props applied to save element.
  */
-function addSizeClassFrontEnd(props, block, attributes) {
-	if (block.name !== 'core/button') {
+function addColumnsClassFrontEnd(props, block, attributes) {
+	if ( block.name !== 'core/list' ) {
 		return props;
 	}
 	const { className } = props;
-	const { size } = attributes;
+	const { columns } = attributes;
 	return assign({}, props, {
-		className: classnames(className, size ? `has-size-${size}` : ''),
+		//className: classnames(className, columns ? `has-columns-${columns}` : ''),
+		className: classnames(className, { [`has-${columns}-columns`] : columns } ),
 	});
 }
 
@@ -132,5 +133,5 @@ function addSizeClassFrontEnd(props, block, attributes) {
 addFilter(
 	'blocks.getSaveContent.extraProps',
 	'block-mods/button-block/add-front-end-class',
-	addSizeClassFrontEnd,
+	addColumnsClassFrontEnd,
 );
