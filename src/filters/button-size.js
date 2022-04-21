@@ -1,4 +1,5 @@
 import classnames from 'classnames';
+
 const { assign, merge } = lodash;
 const { __ } = wp.i18n;
 const { addFilter } = wp.hooks;
@@ -110,7 +111,7 @@ addFilter(
 );
 
 /**
- * Add size class to the block on the front end
+ * Add class to the block on the front end
  *
  * @param  {Object} props      Additional props applied to save element.
  * @param  {Object} block      Block type.
@@ -118,7 +119,7 @@ addFilter(
  * @return {Object}            Filtered props applied to save element.
  */
 function addSizeClassFrontEnd(props, block, attributes) {
-	if (block.name !== 'core/button') {
+	if ( block.name !== 'core/button' ) {
 		return props;
 	}
 	const { className } = props;

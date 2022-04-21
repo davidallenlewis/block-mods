@@ -1,6 +1,7 @@
 import classnames from 'classnames';
 import { ToggleControl } from '@wordpress/components';
 import { useState } from '@wordpress/element';
+
 const { assign, merge } = lodash;
 const { __ } = wp.i18n;
 const { addFilter } = wp.hooks;
@@ -17,14 +18,14 @@ const { PanelBody, SelectControl } = wp.components;
  * @return {Object}          Filtered block settings
  */
 function addAttributes(settings, name) {
-	if (name === 'core/group') {
+	if ( name === 'core/group' || name === 'core/cover' || name === 'core/columns' || name === 'core/media-text' ) {
 		return assign({}, settings, {
 			attributes: merge(settings.attributes, {
-				hasOuterSpacing: {
-					type: 'boolean',
-					default: false,
-				},
 				hasInnerSpacing: {
+					type: 'boolean',
+					default: true,
+				},
+				hasOuterSpacing: {
 					type: 'boolean',
 					default: false,
 				},
@@ -45,21 +46,21 @@ addFilter(
 const addInspectorControl = createHigherOrderComponent((BlockEdit) => {
 	return (props) => {
 		const {
-			attributes: { hasOuterSpacing, hasInnerSpacing },
+			attributes: { hasInnerSpacing, hasOuterSpacing },
 			setAttributes,
 			name,
 		} = props;
-		const toggleHasOuterSpacing = () => {
-			setAttributes( {
-				hasOuterSpacing: ! hasOuterSpacing,
-			} );
-		};
 		const toggleHasInnerSpacing = () => {
 			setAttributes( {
 				hasInnerSpacing: ! hasInnerSpacing,
 			} );
 		};
-		if (name !== 'core/group') {
+		const toggleHasOuterSpacing = () => {
+			setAttributes( {
+				hasOuterSpacing: ! hasOuterSpacing,
+			} );
+		};
+		if ( name !== 'core/group' && name !== 'core/cover' && name !== 'core/columns' && name !== 'core/media-text' ) {
 			return <BlockEdit {...props} />;
 		}
 		return (
@@ -68,14 +69,14 @@ const addInspectorControl = createHigherOrderComponent((BlockEdit) => {
 				<InspectorControls>
 					<PanelBody title={__('Spacing', 'block-mods')} initialOpen={true}>
 						<ToggleControl
-							label={__('Outer Spacing', 'block-mods')}
-							checked={ hasOuterSpacing }
-							onChange={ toggleHasOuterSpacing }
-						/>
-						<ToggleControl
 							label={__('Inner Spacing', 'block-mods')}
 							checked={ hasInnerSpacing }
 							onChange={ toggleHasInnerSpacing }
+						/>
+						<ToggleControl
+							label={__('Outer Spacing', 'block-mods')}
+							checked={ hasOuterSpacing }
+							onChange={ toggleHasOuterSpacing }
 						/>
 					</PanelBody>
 				</InspectorControls>
@@ -99,15 +100,13 @@ const addSizeClassEditor = createHigherOrderComponent((BlockListBlock) => {
 			className,
 			name,
 		} = props;
-
-		if (name !== 'core/group') {
+		if ( name !== 'core/group' && name !== 'core/cover' && name !== 'core/columns' && name !== 'core/media-text' ) {
 			return <BlockListBlock {...props} />;
 		}
-
 		return (
 			<BlockListBlock
 				{...props}
-				className={ classnames(className, { 'has-outer-spacing' : hasOuterSpacing }, { 'has-inner-spacing' : hasInnerSpacing } ) }
+				className={ classnames(className, { 'has-inner-spacing' : hasInnerSpacing }, { 'has-outer-spacing' : hasOuterSpacing } ) }
 			/>
 		);
 	};
@@ -119,7 +118,7 @@ addFilter(
 );
 
 /**
- * Add size class to the block on the front end
+ * Add class to the block on the front end
  *
  * @param  {Object} props      Additional props applied to save element.
  * @param  {Object} block      Block type.
@@ -127,13 +126,13 @@ addFilter(
  * @return {Object}            Filtered props applied to save element.
  */
 function addSizeClassFrontEnd(props, block, attributes) {
-	if (block.name !== 'core/group') {
+	if ( block.name !== 'core/group' && block.name !== 'core/cover' && block.name !== 'core/columns' && block.name !== 'core/media-text' ) {
 		return props;
 	}
 	const { className } = props;
 	const { hasOuterSpacing, hasInnerSpacing } = attributes;
 	return assign({}, props, {
-		className: classnames(className, { 'has-outer-spacing' : attributes.hasOuterSpacing }, { 'has-inner-spacing' : attributes.hasInnerSpacing } ),
+		className: classnames(className, { 'has-inner-spacing' : hasInnerSpacing }, { 'has-outer-spacing' : hasOuterSpacing } ),
 	});
 }
 

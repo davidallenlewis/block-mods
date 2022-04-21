@@ -5,7 +5,7 @@ const { assign, merge } = lodash;
 const { createHigherOrderComponent } = wp.compose;
 
 /**
- * Add Background Color attribute to Video block
+ * Add Background Color attribute to Video block and Gradient Support
  *
  * @param  {Object} settings Original block settings
  * @param  {string} name     Block name
@@ -24,26 +24,11 @@ function addAttributes(settings, name) {
 					default: '',
 				},
 			}),
-		});
-	}
-	return settings;
-}
-addFilter(
-	'blocks.registerBlockType',
-	'intro-to-filters/video-block/add-attributes',
-	addAttributes,
-);
-
-
-/**
- * Add Background Color editor control to Video block by filtering "supports"
- */
-function addVideoBackground(settings, name) {
-	if (name === 'core/video') {
-		return assign({}, settings, {
 			supports: merge(settings.supports, {
 				color: {
-					"gradients": true
+					"background": true,
+					"gradients": true,
+					"text": false
 				},
 			}),
 		});
@@ -53,9 +38,8 @@ function addVideoBackground(settings, name) {
 addFilter(
 	'blocks.registerBlockType',
 	'intro-to-filters/cover-block/alignment-settings',
-	addVideoBackground,
+	addAttributes,
 );
-
 
 /**
  * Add background color class to the block in the editor
@@ -67,11 +51,9 @@ const addBackgroundColorClassEditor = createHigherOrderComponent((BlockListBlock
 			className,
 			name,
 		} = props;
-
-		if (name !== 'core/video') {
+		if ( name !== 'core/video' ) {
 			return <BlockListBlock {...props} />;
 		}
-
 		return (
 			<BlockListBlock
 				{...props}
