@@ -29,6 +29,10 @@ function addAttributes(settings, name) {
 					type: 'boolean',
 					default: false,
 				},
+				hasRainbowSeparator: {
+					type: 'boolean',
+					default: false,
+				},
 			}),
 		});
 	}
@@ -36,7 +40,7 @@ function addAttributes(settings, name) {
 }
 addFilter(
 	'blocks.registerBlockType',
-	'block-mods/group-block/add-attributes',
+	'block-mods/multiple-blocks/add-spacing-attributes',
 	addAttributes,
 );
 
@@ -46,7 +50,7 @@ addFilter(
 const addInspectorControl = createHigherOrderComponent((BlockEdit) => {
 	return (props) => {
 		const {
-			attributes: { hasInnerSpacing, hasOuterSpacing },
+			attributes: { hasInnerSpacing, hasOuterSpacing, hasRainbowSeparator },
 			setAttributes,
 			name,
 		} = props;
@@ -60,6 +64,11 @@ const addInspectorControl = createHigherOrderComponent((BlockEdit) => {
 				hasOuterSpacing: ! hasOuterSpacing,
 			} );
 		};
+		const toggleHasRainbowSeparator = () => {
+			setAttributes( {
+				hasRainbowSeparator: ! hasRainbowSeparator,
+			} );
+		};
 		if ( name !== 'core/group' && name !== 'core/cover' && name !== 'core/columns' && name !== 'core/media-text' ) {
 			return <BlockEdit {...props} />;
 		}
@@ -67,7 +76,7 @@ const addInspectorControl = createHigherOrderComponent((BlockEdit) => {
 			<Fragment>
 				<BlockEdit {...props} />
 				<InspectorControls>
-					<PanelBody title={__('Spacing', 'block-mods')} initialOpen={true}>
+					<PanelBody title={__('Spacing & Separators', 'block-mods')} initialOpen={true}>
 						<ToggleControl
 							label={__('Inner Spacing', 'block-mods')}
 							checked={ hasInnerSpacing }
@@ -78,6 +87,11 @@ const addInspectorControl = createHigherOrderComponent((BlockEdit) => {
 							checked={ hasOuterSpacing }
 							onChange={ toggleHasOuterSpacing }
 						/>
+						<ToggleControl
+							label={__('Rainbow Separator', 'block-mods')}
+							checked={ hasRainbowSeparator }
+							onChange={ toggleHasRainbowSeparator }
+						/>
 					</PanelBody>
 				</InspectorControls>
 			</Fragment>
@@ -86,7 +100,7 @@ const addInspectorControl = createHigherOrderComponent((BlockEdit) => {
 }, 'withInspectorControl');
 addFilter(
 	'editor.BlockEdit',
-	'block-mods/group-block/add-inspector-controls',
+	'block-mods/multiple-blocks/add-spacing-controls',
 	addInspectorControl,
 );
 
@@ -96,7 +110,7 @@ addFilter(
 const addSizeClassEditor = createHigherOrderComponent((BlockListBlock) => {
 	return (props) => {
 		const {
-			attributes: { hasOuterSpacing, hasInnerSpacing },
+			attributes: { hasOuterSpacing, hasInnerSpacing, hasRainbowSeparator },
 			className,
 			name,
 		} = props;
@@ -106,14 +120,14 @@ const addSizeClassEditor = createHigherOrderComponent((BlockListBlock) => {
 		return (
 			<BlockListBlock
 				{...props}
-				className={ classnames(className, { 'has-inner-spacing' : hasInnerSpacing }, { 'has-outer-spacing' : hasOuterSpacing } ) }
+				className={ classnames(className, { 'has-inner-spacing' : hasInnerSpacing }, { 'has-outer-spacing' : hasOuterSpacing }, { 'has-rainbow-separator' : hasRainbowSeparator } ) }
 			/>
 		);
 	};
 }, 'withClientIdClassName');
 addFilter(
 	'editor.BlockListBlock',
-	'block-mods/group-block/add-spacing-classes',
+	'block-mods/multiple-blocks/add-spacing-classes-editor',
 	addSizeClassEditor,
 );
 
@@ -130,15 +144,15 @@ function addSizeClassFrontEnd(props, block, attributes) {
 		return props;
 	}
 	const { className } = props;
-	const { hasOuterSpacing, hasInnerSpacing } = attributes;
+	const { hasOuterSpacing, hasInnerSpacing, hasRainbowSeparator } = attributes;
 	return assign({}, props, {
-		className: classnames(className, { 'has-inner-spacing' : hasInnerSpacing }, { 'has-outer-spacing' : hasOuterSpacing } ),
+		className: classnames(className, { 'has-inner-spacing' : hasInnerSpacing }, { 'has-outer-spacing' : hasOuterSpacing }, { 'has-rainbow-separator' : hasRainbowSeparator } ),
 	});
 }
 
 // Comment out to test the PHP approach defined in block-mods.php
 addFilter(
 	'blocks.getSaveContent.extraProps',
-	'block-mods/group-block/add-front-end-class',
+	'block-mods/multiple-blocks/add-spacing-classes-public',
 	addSizeClassFrontEnd,
 );

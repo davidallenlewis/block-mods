@@ -32,7 +32,7 @@ function addAttributes(settings, name) {
 }
 addFilter(
 	'blocks.registerBlockType',
-	'block-mods/heading-block/add-attributes',
+	'block-mods/heading-block/add-ruled-attribute',
 	addAttributes,
 );
 
@@ -72,7 +72,7 @@ const addInspectorControl = createHigherOrderComponent((BlockEdit) => {
 }, 'withInspectorControl');
 addFilter(
 	'editor.BlockEdit',
-	'block-mods/heading-block/add-inspector-controls',
+	'block-mods/heading-block/add-ruled-controls',
 	addInspectorControl,
 );
 
@@ -94,14 +94,14 @@ const addSizeClassEditor = createHigherOrderComponent((BlockListBlock) => {
 		return (
 			<BlockListBlock
 				{...props}
-				className={classnames(className, {'has-rule' : hasRule})}
+				className={ classnames( className, {'has-green-underline' : hasRule} ) }
 			/>
 		);
 	};
 }, 'withClientIdClassName');
 addFilter(
 	'editor.BlockListBlock',
-	'block-mods/heading-block/add-ruled-class',
+	'block-mods/heading-block/add-ruled-class-editor',
 	addSizeClassEditor,
 );
 
@@ -120,13 +120,13 @@ function addSizeClassFrontEnd(props, block, attributes) {
 	const { className } = props;
 	const { hasRule } = attributes;
 	return assign({}, props, {
-		className: classnames(className, {'has-rule' : hasRule} ),
+		className: classnames(className, {'has-green-underline' : hasRule} ),
 	});
 }
 
 // Comment out to test the PHP approach defined in block-mods.php
 addFilter(
 	'blocks.getSaveContent.extraProps',
-	'block-mods/heading-block/add-front-end-class',
+	'block-mods/heading-block/add-ruled-class-public',
 	addSizeClassFrontEnd,
 );

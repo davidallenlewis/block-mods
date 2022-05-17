@@ -52,14 +52,14 @@ const addInspectorControl = createHigherOrderComponent((BlockEdit) => {
 			<Fragment>
 				<BlockEdit {...props} />
 				<InspectorControls>
-					<PanelBody title={ __( 'Columns' ) }>
+					<PanelBody title={ __( 'Columns' ) } initialOpen={true}>
 						<ButtonGroup aria-label={ __( 'Columns' ) }>
 							{ [ "1", "2", "3", "4" ].map( ( columnValue ) => {
 								return (
 									<Button
 										key={ columnValue }
 										isPrimary={ columns === columnValue }
-										onClick={ ( key ) => {
+										onClick={ () => {
 											setAttributes({ columns: columnValue });
 										}}
 									>
@@ -76,7 +76,7 @@ const addInspectorControl = createHigherOrderComponent((BlockEdit) => {
 }, 'withInspectorControl');
 addFilter(
 	'editor.BlockEdit',
-	'block-mods/list-block/add-inspector-controls',
+	'block-mods/list-block/add-columns-controls',
 	addInspectorControl,
 );
 
@@ -98,14 +98,14 @@ const addColumnsClassEditor = createHigherOrderComponent((BlockListBlock) => {
 		return (
 			<BlockListBlock
 				{...props}
-				className={classnames(className, columns ? `has-${columns}-columns` : '')}
+				className={classnames(className, { [`has-${columns}-columns`] : columns } )}
 			/>
 		);
 	};
 }, 'withClientIdClassName');
 addFilter(
 	'editor.BlockListBlock',
-	'block-mods/button-block/add-editor-class',
+	'block-mods/button-block/add-columns-class-editor',
 	addColumnsClassEditor,
 );
 
@@ -124,7 +124,6 @@ function addColumnsClassFrontEnd(props, block, attributes) {
 	const { className } = props;
 	const { columns } = attributes;
 	return assign({}, props, {
-		//className: classnames(className, columns ? `has-columns-${columns}` : ''),
 		className: classnames(className, { [`has-${columns}-columns`] : columns } ),
 	});
 }
@@ -132,6 +131,6 @@ function addColumnsClassFrontEnd(props, block, attributes) {
 // Comment out to test the PHP approach defined in block-mods.php
 addFilter(
 	'blocks.getSaveContent.extraProps',
-	'block-mods/button-block/add-front-end-class',
+	'block-mods/button-block/add-columns-class-public',
 	addColumnsClassFrontEnd,
 );

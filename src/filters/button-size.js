@@ -29,7 +29,7 @@ function addAttributes(settings, name) {
 }
 addFilter(
 	'blocks.registerBlockType',
-	'block-mods/button-block/add-attributes',
+	'block-mods/button-block/add-size-attribute',
 	addAttributes,
 );
 
@@ -76,7 +76,7 @@ const addInspectorControl = createHigherOrderComponent((BlockEdit) => {
 }, 'withInspectorControl');
 addFilter(
 	'editor.BlockEdit',
-	'block-mods/button-block/add-inspector-controls',
+	'block-mods/button-block/add-size-controls',
 	addInspectorControl,
 );
 
@@ -98,19 +98,20 @@ const addSizeClassEditor = createHigherOrderComponent((BlockListBlock) => {
 		return (
 			<BlockListBlock
 				{...props}
-				className={classnames(className, size ? `has-size-${size}` : '')}
+				className={ classnames( className, { [`has-size-${size}`] : size } ) }
+				
 			/>
 		);
 	};
 }, 'withClientIdClassName');
 addFilter(
 	'editor.BlockListBlock',
-	'block-mods/button-block/add-editor-class',
+	'block-mods/button-block/add-size-class-editor',
 	addSizeClassEditor,
 );
 
 /**
- * Add size class to the block on the front end
+ * Add class to the block on the front end
  *
  * @param  {Object} props      Additional props applied to save element.
  * @param  {Object} block      Block type.
@@ -118,19 +119,19 @@ addFilter(
  * @return {Object}            Filtered props applied to save element.
  */
 function addSizeClassFrontEnd(props, block, attributes) {
-	if (block.name !== 'core/button') {
+	if ( block.name !== 'core/button' ) {
 		return props;
 	}
 	const { className } = props;
 	const { size } = attributes;
 	return assign({}, props, {
-		className: classnames(className, size ? `has-size-${size}` : ''),
+		className: classnames(className, { [`has-size-${size}`] : size } ),
 	});
 }
 
 // Comment out to test the PHP approach defined in block-mods.php
 addFilter(
 	'blocks.getSaveContent.extraProps',
-	'block-mods/button-block/add-front-end-class',
+	'block-mods/button-block/add-size-class-public',
 	addSizeClassFrontEnd,
 );
