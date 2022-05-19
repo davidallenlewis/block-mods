@@ -25,6 +25,10 @@ function addAttributes(settings, name) {
 					type: 'boolean',
 					default: true,
 				},
+				hasTopMargin: {
+					type: 'boolean',
+					default: false,
+				},
 			}),
 		});
 	}
@@ -42,13 +46,18 @@ addFilter(
 const addInspectorControl = createHigherOrderComponent((BlockEdit) => {
 	return (props) => {
 		const {
-			attributes: { hasRule },
+			attributes: { hasRule, hasTopMargin },
 			setAttributes,
 			name,
 		} = props;
-		const togglehasRule = () => {
+		const toggleHasRule = () => {
 			setAttributes( {
 				hasRule: ! hasRule,
+			} );
+		};
+		const toggleHasTopMargin = () => {
+			setAttributes( {
+				hasTopMargin: ! hasTopMargin,
 			} );
 		};
 		if (name !== 'core/heading') {
@@ -62,7 +71,12 @@ const addInspectorControl = createHigherOrderComponent((BlockEdit) => {
 						<ToggleControl
 							label={__('Green Underline', 'block-mods')}
 							checked={ hasRule }
-							onChange={ togglehasRule }
+							onChange={ toggleHasRule }
+						/>
+						<ToggleControl
+							label={__('Top Margin', 'block-mods')}
+							checked={ hasTopMargin }
+							onChange={ toggleHasTopMargin }
 						/>
 					</PanelBody>
 				</InspectorControls>
@@ -82,7 +96,7 @@ addFilter(
 const addSizeClassEditor = createHigherOrderComponent((BlockListBlock) => {
 	return (props) => {
 		const {
-			attributes: { hasRule },
+			attributes: { hasRule, hasTopMargin },
 			className,
 			name,
 		} = props;
@@ -94,7 +108,7 @@ const addSizeClassEditor = createHigherOrderComponent((BlockListBlock) => {
 		return (
 			<BlockListBlock
 				{...props}
-				className={ classnames( className, {'has-green-underline' : hasRule} ) }
+				className={ classnames( className, {'has-green-underline' : hasRule}, {'has-top-margin' : hasTopMargin} ) }
 			/>
 		);
 	};
@@ -118,9 +132,9 @@ function addSizeClassFrontEnd(props, block, attributes) {
 		return props;
 	}
 	const { className } = props;
-	const { hasRule } = attributes;
+	const { hasRule, hasTopMargin } = attributes;
 	return assign({}, props, {
-		className: classnames(className, {'has-green-underline' : hasRule} ),
+		className: classnames(className, {'has-green-underline' : hasRule}, {'has-top-margin' : hasTopMargin} ),
 	});
 }
 
