@@ -1,3 +1,5 @@
+npm run build
+
 # Block Mods
 A WordPress plugin that modifies and extends native Gutenberg Block functionality:
 - Adds gradient backgrounds to core/video block
