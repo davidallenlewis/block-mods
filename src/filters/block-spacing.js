@@ -18,7 +18,7 @@ const { PanelBody, SelectControl } = wp.components;
  * @return {Object}          Filtered block settings
  */
 function addAttributes(settings, name) {
-	if ( name === 'core/group' || name === 'core/cover' || name === 'core/columns' || name === 'core/media-text' ) {
+	if ( name === 'core/group' || name === 'core/cover' || name === 'core/column' || name === 'core/columns' || name === 'core/media-text' ) {
 		return assign({}, settings, {
 			attributes: merge(settings.attributes, {
 				hasInnerSpacing: {
@@ -69,7 +69,7 @@ const addInspectorControl = createHigherOrderComponent((BlockEdit) => {
 				hasRainbowSeparator: ! hasRainbowSeparator,
 			} );
 		};
-		if ( name !== 'core/group' && name !== 'core/cover' && name !== 'core/columns' && name !== 'core/media-text' ) {
+		if ( name !== 'core/group' && name !== 'core/cover' && name !== 'core/column' && name !== 'core/columns' && name !== 'core/media-text' ) {
 			return <BlockEdit {...props} />;
 		}
 		return (
@@ -114,7 +114,7 @@ const addSizeClassEditor = createHigherOrderComponent((BlockListBlock) => {
 			className,
 			name,
 		} = props;
-		if ( name !== 'core/group' && name !== 'core/cover' && name !== 'core/columns' && name !== 'core/media-text' ) {
+		if ( name !== 'core/group' && name !== 'core/cover' && name !== 'core/column' && name !== 'core/columns' && name !== 'core/media-text' ) {
 			return <BlockListBlock {...props} />;
 		}
 		return (
@@ -140,7 +140,7 @@ addFilter(
  * @return {Object}            Filtered props applied to save element.
  */
 function addSizeClassFrontEnd(props, block, attributes) {
-	if ( block.name !== 'core/group' && block.name !== 'core/cover' && block.name !== 'core/columns' && block.name !== 'core/media-text' ) {
+	if ( block.name !== 'core/group' && block.name !== 'core/cover' && block.name !== 'core/column' && block.name !== 'core/columns' && block.name !== 'core/media-text' ) {
 		return props;
 	}
 	const { className } = props;
