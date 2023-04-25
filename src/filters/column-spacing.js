@@ -1,5 +1,6 @@
 import classnames from 'classnames';
-import { Button, ButtonGroup } from '@wordpress/components';
+import { ToggleControl } from '@wordpress/components';
+import { useState } from '@wordpress/element';
 
 const { assign, merge } = lodash;
 const { __ } = wp.i18n;
@@ -10,19 +11,19 @@ const { InspectorControls } = wp.blockEditor;
 const { PanelBody, SelectControl } = wp.components;
 
 /**
- * Add columns attribute to Button block
+ * Add spacing attributes to Group block
  *
  * @param  {Object} settings Original block settings
  * @param  {string} name     Block name
  * @return {Object}          Filtered block settings
  */
 function addAttributes(settings, name) {
-	if (name === 'core/list') {
+	if ( name === 'core/column' ) {
 		return assign({}, settings, {
 			attributes: merge(settings.attributes, {
-				columns: {
-					type: 'string',
-					default: '1',
+				hasInnerSpacing: {
+					type: 'boolean',
+					default: false,
 				},
 			}),
 		});
@@ -31,43 +32,38 @@ function addAttributes(settings, name) {
 }
 addFilter(
 	'blocks.registerBlockType',
-	'block-mods/list-block/add-columns-attribute',
+	'block-mods/column-block/add-spacing-attributes',
 	addAttributes,
 );
 
 /**
- * Add Columns control to List block
+ * Add Size control to Group block
  */
 const addInspectorControl = createHigherOrderComponent((BlockEdit) => {
 	return (props) => {
 		const {
-			attributes: { columns },
+			attributes: { hasInnerSpacing },
 			setAttributes,
 			name,
 		} = props;
-		if (name !== 'core/list') {
+		const toggleHasInnerSpacing = () => {
+			setAttributes( {
+				hasInnerSpacing: ! hasInnerSpacing,
+			} );
+		};
+		if ( name !== 'core/column' ) {
 			return <BlockEdit {...props} />;
 		}
 		return (
 			<Fragment>
 				<BlockEdit {...props} />
 				<InspectorControls>
-					<PanelBody title={ __( 'Columns' ) } initialOpen={true}>
-						<ButtonGroup aria-label={ __( 'Columns' ) }>
-							{ [ "1", "2", "3", "4" ].map( ( columnValue ) => {
-								return (
-									<Button
-										key={ columnValue }
-										isPrimary={ columns === columnValue }
-										onClick={ () => {
-											setAttributes({ columns: columnValue });
-										}}
-									>
-										{ columnValue }
-									</Button>
-								);
-							} ) }
-						</ButtonGroup>
+					<PanelBody title={__('Spacing', 'block-mods')} initialOpen={true}>
+						<ToggleControl
+							label={__('Inner Spacing', 'block-mods')}
+							checked={ hasInnerSpacing }
+							onChange={ toggleHasInnerSpacing }
+						/>
 					</PanelBody>
 				</InspectorControls>
 			</Fragment>
@@ -76,37 +72,35 @@ const addInspectorControl = createHigherOrderComponent((BlockEdit) => {
 }, 'withInspectorControl');
 addFilter(
 	'editor.BlockEdit',
-	'block-mods/list-block/add-columns-controls',
+	'block-mods/column-block/add-spacing-controls',
 	addInspectorControl,
 );
 
 /**
- * Add columns class to the block in the editor
+ * Add spacing classes to the block in the editor
  */
-const addColumnsClassEditor = createHigherOrderComponent((BlockListBlock) => {
+const addSizeClassEditor = createHigherOrderComponent((BlockListBlock) => {
 	return (props) => {
 		const {
-			attributes: { columns },
+			attributes: { hasInnerSpacing },
 			className,
 			name,
 		} = props;
-
-		if (name !== 'core/list') {
+		if ( name !== 'core/column' ) {
 			return <BlockListBlock {...props} />;
 		}
-
 		return (
 			<BlockListBlock
 				{...props}
-				className={classnames(className, { [`has-${columns}-columns`] : columns } )}
+				className={ classnames(className, { 'has-inner-spacing' : hasInnerSpacing } ) }
 			/>
 		);
 	};
 }, 'withClientIdClassName');
 addFilter(
 	'editor.BlockListBlock',
-	'block-mods/button-block/add-columns-class-editor',
-	addColumnsClassEditor,
+	'block-mods/column-block/add-spacing-classes-editor',
+	addSizeClassEditor,
 );
 
 /**
@@ -117,20 +111,20 @@ addFilter(
  * @param  {Object} attributes Current block attributes.
  * @return {Object}            Filtered props applied to save element.
  */
-function addColumnsClassFrontEnd(props, block, attributes) {
-	if ( block.name !== 'core/list' ) {
+function addSizeClassFrontEnd(props, block, attributes) {
+	if ( block.name !== 'core/column' ) {
 		return props;
 	}
 	const { className } = props;
-	const { columns } = attributes;
+	const { hasInnerSpacing } = attributes;
 	return assign({}, props, {
-		className: classnames(className, { [`has-${columns}-columns`] : columns } ),
+		className: classnames(className, { 'has-inner-spacing' : hasInnerSpacing } ),
 	});
 }
 
 // Comment out to test the PHP approach defined in block-mods.php
 addFilter(
 	'blocks.getSaveContent.extraProps',
-	'block-mods/button-block/add-columns-class-public',
-	addColumnsClassFrontEnd,
+	'block-mods/column-block/add-spacing-classes-public',
+	addSizeClassFrontEnd,
 );

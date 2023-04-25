@@ -18,7 +18,7 @@ const { PanelBody, SelectControl } = wp.components;
  * @return {Object}          Filtered block settings
  */
 function addAttributes(settings, name) {
-	if ( name === 'core/group' || name === 'core/cover' || name === 'core/column' || name === 'core/columns' || name === 'core/media-text' ) {
+	if ( name === 'core/group' || name === 'core/cover' || name === 'core/columns' || name === 'core/media-text' ) {
 		return assign({}, settings, {
 			attributes: merge(settings.attributes, {
 				hasInnerSpacing: {
@@ -29,7 +29,11 @@ function addAttributes(settings, name) {
 					type: 'boolean',
 					default: false,
 				},
-				hasRainbowSeparator: {
+				hasRainbowSeparatorTop: {
+					type: 'boolean',
+					default: false,
+				},
+				hasRainbowSeparatorBottom: {
 					type: 'boolean',
 					default: false,
 				},
@@ -50,7 +54,7 @@ addFilter(
 const addInspectorControl = createHigherOrderComponent((BlockEdit) => {
 	return (props) => {
 		const {
-			attributes: { hasInnerSpacing, hasOuterSpacing, hasRainbowSeparator },
+			attributes: { hasInnerSpacing, hasOuterSpacing, hasRainbowSeparatorTop, hasRainbowSeparatorBottom },
 			setAttributes,
 			name,
 		} = props;
@@ -64,12 +68,17 @@ const addInspectorControl = createHigherOrderComponent((BlockEdit) => {
 				hasOuterSpacing: ! hasOuterSpacing,
 			} );
 		};
-		const toggleHasRainbowSeparator = () => {
+		const toggleHasRainbowSeparatorTop = () => {
 			setAttributes( {
-				hasRainbowSeparator: ! hasRainbowSeparator,
+				hasRainbowSeparatorTop: ! hasRainbowSeparatorTop,
 			} );
 		};
-		if ( name !== 'core/group' && name !== 'core/cover' && name !== 'core/column' && name !== 'core/columns' && name !== 'core/media-text' ) {
+		const toggleHasRainbowSeparatorBottom = () => {
+			setAttributes( {
+				hasRainbowSeparatorBottom: ! hasRainbowSeparatorBottom,
+			} );
+		};
+		if ( name !== 'core/group' && name !== 'core/cover' && name !== 'core/columns' && name !== 'core/media-text' ) {
 			return <BlockEdit {...props} />;
 		}
 		return (
@@ -88,9 +97,14 @@ const addInspectorControl = createHigherOrderComponent((BlockEdit) => {
 							onChange={ toggleHasOuterSpacing }
 						/>
 						<ToggleControl
-							label={__('Rainbow Separator', 'block-mods')}
-							checked={ hasRainbowSeparator }
-							onChange={ toggleHasRainbowSeparator }
+							label={__('Rainbow Bar (Top)', 'block-mods')}
+							checked={ hasRainbowSeparatorTop }
+							onChange={ toggleHasRainbowSeparatorTop }
+						/>
+						<ToggleControl
+							label={__('Rainbow Bar (Bottom)', 'block-mods')}
+							checked={ hasRainbowSeparatorBottom }
+							onChange={ toggleHasRainbowSeparatorBottom }
 						/>
 					</PanelBody>
 				</InspectorControls>
@@ -110,17 +124,23 @@ addFilter(
 const addSizeClassEditor = createHigherOrderComponent((BlockListBlock) => {
 	return (props) => {
 		const {
-			attributes: { hasOuterSpacing, hasInnerSpacing, hasRainbowSeparator },
+			attributes: { hasOuterSpacing, hasInnerSpacing, hasRainbowSeparatorTop, hasRainbowSeparatorBottom },
 			className,
 			name,
 		} = props;
-		if ( name !== 'core/group' && name !== 'core/cover' && name !== 'core/column' && name !== 'core/columns' && name !== 'core/media-text' ) {
+		if ( name !== 'core/group' && name !== 'core/cover' && name !== 'core/columns' && name !== 'core/media-text' ) {
 			return <BlockListBlock {...props} />;
 		}
 		return (
 			<BlockListBlock
 				{...props}
-				className={ classnames(className, { 'has-inner-spacing' : hasInnerSpacing }, { 'has-outer-spacing' : hasOuterSpacing }, { 'has-rainbow-separator' : hasRainbowSeparator } ) }
+				className={ classnames(
+					className,
+					{ 'has-inner-spacing' : hasInnerSpacing },
+					{ 'has-outer-spacing' : hasOuterSpacing },
+					{ 'has-rainbow-separator has-rainbow-separator--top' : hasRainbowSeparatorTop },
+					{ 'has-rainbow-separator has-rainbow-separator--bottom' : hasRainbowSeparatorBottom }
+				) }
 			/>
 		);
 	};
@@ -140,13 +160,19 @@ addFilter(
  * @return {Object}            Filtered props applied to save element.
  */
 function addSizeClassFrontEnd(props, block, attributes) {
-	if ( block.name !== 'core/group' && block.name !== 'core/cover' && block.name !== 'core/column' && block.name !== 'core/columns' && block.name !== 'core/media-text' ) {
+	if ( block.name !== 'core/group' && block.name !== 'core/cover' && block.name !== 'core/columns' && block.name !== 'core/media-text' ) {
 		return props;
 	}
 	const { className } = props;
-	const { hasOuterSpacing, hasInnerSpacing, hasRainbowSeparator } = attributes;
+	const { hasOuterSpacing, hasInnerSpacing, hasRainbowSeparatorTop, hasRainbowSeparatorBottom } = attributes;
 	return assign({}, props, {
-		className: classnames(className, { 'has-inner-spacing' : hasInnerSpacing }, { 'has-outer-spacing' : hasOuterSpacing }, { 'has-rainbow-separator' : hasRainbowSeparator } ),
+		className: classnames(
+			className,
+			{ 'has-inner-spacing' : hasInnerSpacing },
+			{ 'has-outer-spacing' : hasOuterSpacing },
+			{ 'has-rainbow-separator has-rainbow-separator--top' : hasRainbowSeparatorTop },
+			{ 'has-rainbow-separator has-rainbow-separator--bottom' : hasRainbowSeparatorBottom }
+		),
 	});
 }
 

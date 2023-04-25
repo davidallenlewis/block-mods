@@ -12,7 +12,7 @@ const { createHigherOrderComponent } = wp.compose;
  * @return {Object}          Filtered block settings
  */
 function addAttributes(settings, name) {
-	if ( name === 'core/image' || name === 'core/video' || name === 'core/media-text' ) {
+	if ( name === 'core/image' || name === 'core/video' || name === 'core/embed' || name === 'core/embed' || name === 'core/media-text' ) {
 		return assign({}, settings, {
 			attributes: merge(settings.attributes, {
 				backgroundColor: {
@@ -52,7 +52,7 @@ const addBackgroundColorClassEditor = createHigherOrderComponent((BlockListBlock
 			className,
 			name,
 		} = props;
-		if ( name !== 'core/image' && name !== 'core/video' && name !== 'core/media-text' ) {
+		if ( name !== 'core/image' && name !== 'core/video' && name !== 'core/embed' && name !== 'core/media-text' ) {
 			return <BlockListBlock {...props} />;
 		}
 		return (
@@ -79,7 +79,7 @@ addFilter(
  * @return {Object}            Filtered props applied to save element.
  */
 function addSizeClassFrontEnd(props, block, attributes) {
-	if ( block.name !== 'core/image' && block.name !== 'core/video' && block.name !== 'core/media-text' ) {
+	if ( block.name !== 'core/image' && block.name !== 'core/video' && block.name !== 'core/embed' && block.name !== 'core/media-text' ) {
 		return props;
 	}
 	const { className } = props;
@@ -95,5 +95,3 @@ addFilter(
 	'block-mods/multiple-blocks/add-spacing-classes-public',
 	addSizeClassFrontEnd,
 );
-
-

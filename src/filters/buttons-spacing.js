@@ -19,14 +19,14 @@ const { PanelBody, SelectControl } = wp.components;
  * @return {Object}          Filtered block settings
  */
 function addAttributes(settings, name) {
-	if ( name === 'core/column' ) {
+	if ( name === 'core/buttons' ) {
 		return assign({}, settings, {
 			attributes: merge(settings.attributes, {
-				hasPadding: {
+				spaceAbove: {
 					type: 'boolean',
 					default: false,
 				},
-				removeGutter: {
+				spaceBelow: {
 					type: 'boolean',
 					default: false,
 				},
@@ -37,7 +37,7 @@ function addAttributes(settings, name) {
 }
 addFilter(
 	'blocks.registerBlockType',
-	'block-mods/column-block/add-padding-attribute',
+	'block-mods/buttons-block/add-spacing-attributes',
 	addAttributes,
 );
 
@@ -47,21 +47,21 @@ addFilter(
 const addInspectorControl = createHigherOrderComponent((BlockEdit) => {
 	return (props) => {
 		const {
-			attributes: { hasPadding, removeGutter },
+			attributes: { spaceAbove, spaceBelow },
 			setAttributes,
 			name,
 		} = props;
-		const toggleHasPadding = () => {
+		const toggleSpaceAbove = () => {
 			setAttributes( {
-				hasPadding: ! hasPadding,
+				spaceAbove: ! spaceAbove,
 			} );
 		};
-		const toggleRemoveGutter = () => {
+		const toggleSpaceBelow = () => {
 			setAttributes( {
-				removeGutter: ! removeGutter,
+				spaceBelow: ! spaceBelow,
 			} );
 		};
-		if ( name !== 'core/column' ) {
+		if ( name !== 'core/buttons' ) {
 			return <BlockEdit {...props} />;
 		}
 		return (
@@ -70,14 +70,14 @@ const addInspectorControl = createHigherOrderComponent((BlockEdit) => {
 				<InspectorControls>
 					<PanelBody title={__('Spacing settings', 'block-mods')}>
 						<ToggleControl
-							label={__('Add Padding', 'block-mods')}
-							checked={ hasPadding }
-							onChange={ toggleHasPadding }
+							label={__('Space Above', 'block-mods')}
+							checked={ spaceAbove }
+							onChange={ toggleSpaceAbove }
 						/>
 						<ToggleControl
-							label={__('Remove Gutter', 'block-mods')}
-							checked={ removeGutter }
-							onChange={ toggleRemoveGutter }
+							label={__('Space Below', 'block-mods')}
+							checked={ spaceBelow }
+							onChange={ toggleSpaceBelow }
 						/>
 					</PanelBody>
 				</InspectorControls>
@@ -87,7 +87,7 @@ const addInspectorControl = createHigherOrderComponent((BlockEdit) => {
 }, 'withInspectorControl');
 addFilter(
 	'editor.BlockEdit',
-	'block-mods/column-block/add-padding-control',
+	'block-mods/buttons-block/add-spacing-controls',
 	addInspectorControl,
 );
 
@@ -97,24 +97,24 @@ addFilter(
 const addPaddingClassEditor = createHigherOrderComponent((BlockListBlock) => {
 	return (props) => {
 		const {
-			attributes: { hasPadding, removeGutter },
+			attributes: { spaceAbove, spaceBelow },
 			className,
 			name,
 		} = props;
-		if ( name !== 'core/column' ) {
+		if ( name !== 'core/buttons' ) {
 			return <BlockListBlock {...props} />;
 		}
 		return (
 			<BlockListBlock
 				{...props}
-				className={ classnames(className, { 'has-padding' : hasPadding }, { 'no-gutter' : removeGutter } ) }
+				className={ classnames(className, { 'has-space-above--md' : spaceAbove }, { 'has-space-below--md' : spaceBelow } ) }
 			/>
 		);
 	};
 }, 'withClientIdClassName');
 addFilter(
 	'editor.BlockListBlock',
-	'block-mods/column-block/add-padding-class-editor',
+	'block-mods/buttons-block/add-spacing-class-editor',
 	addPaddingClassEditor,
 );
 
@@ -127,17 +127,17 @@ addFilter(
  * @return {Object}            Filtered props applied to save element.
  */
 function addPaddingClassFrontEnd(props, block, attributes) {
-	if ( block.name !== 'core/column' ) {
+	if ( block.name !== 'core/buttons' ) {
 		return props;
 	}
 	const { className } = props;
-	const { hasPadding, removeGutter } = attributes;
+	const { spaceAbove, spaceBelow } = attributes;
 	return assign({}, props, {
-		className: classnames(className, { 'has-padding' : hasPadding }, { 'no-gutter' : removeGutter } ),
+		className: classnames(className, { 'has-space-above--md' : spaceAbove }, { 'has-space-below--md' : spaceBelow } ),
 	});
 }
 addFilter(
 	'blocks.getSaveContent.extraProps',
-	'block-mods/column-block/add-padding-class-public',
+	'block-mods/buttons-block/add-spacing-class-public',
 	addPaddingClassFrontEnd,
 );

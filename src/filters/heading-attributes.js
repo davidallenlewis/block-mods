@@ -11,14 +11,14 @@ const { InspectorControls } = wp.blockEditor;
 const { PanelBody, SelectControl } = wp.components;
 
 /**
- * Add Ruled attribute to Heading block
+ * Add custom attribute to Heading block
  *
  * @param  {Object} settings Original block settings
  * @param  {string} name     Block name
  * @return {Object}          Filtered block settings
  */
 function addAttributes(settings, name) {
-	if (name === 'core/heading') {
+	if ( name === 'core/heading' || name === 'core/post-title' ) {
 		return assign({}, settings, {
 			attributes: merge(settings.attributes, {
 				hasRule: {
@@ -36,7 +36,7 @@ function addAttributes(settings, name) {
 }
 addFilter(
 	'blocks.registerBlockType',
-	'block-mods/heading-block/add-ruled-attribute',
+	'block-mods/heading-block/add-custom-attributes',
 	addAttributes,
 );
 
@@ -60,7 +60,7 @@ const addInspectorControl = createHigherOrderComponent((BlockEdit) => {
 				hasTopMargin: ! hasTopMargin,
 			} );
 		};
-		if (name !== 'core/heading') {
+		if ( name !== 'core/heading' && name !== 'core/post-title' ) {
 			return <BlockEdit {...props} />;
 		}
 		return (
@@ -86,7 +86,7 @@ const addInspectorControl = createHigherOrderComponent((BlockEdit) => {
 }, 'withInspectorControl');
 addFilter(
 	'editor.BlockEdit',
-	'block-mods/heading-block/add-ruled-controls',
+	'block-mods/heading-block/add-custom-controls',
 	addInspectorControl,
 );
 
@@ -101,7 +101,7 @@ const addSizeClassEditor = createHigherOrderComponent((BlockListBlock) => {
 			name,
 		} = props;
 
-		if (name !== 'core/heading') {
+		if ( name !== 'core/heading' && name !== 'core/post-title' ) {
 			return <BlockListBlock {...props} />;
 		}
 
@@ -115,7 +115,7 @@ const addSizeClassEditor = createHigherOrderComponent((BlockListBlock) => {
 }, 'withClientIdClassName');
 addFilter(
 	'editor.BlockListBlock',
-	'block-mods/heading-block/add-ruled-class-editor',
+	'block-mods/heading-block/add-custom-classes-editor',
 	addSizeClassEditor,
 );
 
@@ -125,7 +125,8 @@ addFilter(
  * @param  {Object} props      Additional props applied to save element.
  * @param  {Object} block      Block type.
  * @param  {Object} attributes Current block attributes.
- * @return {Object}            Filtered props applied to save element.
+ * @note   core/post-title has no save function so use render_block PHP filter instead in index.php
+ * @return {Object}            Filtered props applied to save element
  */
 function addSizeClassFrontEnd(props, block, attributes) {
 	if ( block.name !== 'core/heading' ) {
@@ -141,6 +142,6 @@ function addSizeClassFrontEnd(props, block, attributes) {
 // Comment out to test the PHP approach defined in block-mods.php
 addFilter(
 	'blocks.getSaveContent.extraProps',
-	'block-mods/heading-block/add-ruled-class-public',
+	'block-mods/heading-block/add-custom-classes-public',
 	addSizeClassFrontEnd,
 );

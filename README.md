@@ -1,5 +1,7 @@
 npm run build
 
+https://css-tricks.com/a-crash-course-in-wordpress-block-filters/
+
 # Block Mods
 A WordPress plugin that modifies and extends native Gutenberg Block functionality:
 - Adds gradient backgrounds to core/video block
