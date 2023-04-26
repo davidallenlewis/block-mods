@@ -104,7 +104,6 @@ const addSizeClassEditor = createHigherOrderComponent((BlockListBlock) => {
 		if ( name !== 'core/heading' && name !== 'core/post-title' ) {
 			return <BlockListBlock {...props} />;
 		}
-
 		return (
 			<BlockListBlock
 				{...props}
@@ -129,13 +128,17 @@ addFilter(
  * @return {Object}            Filtered props applied to save element
  */
 function addSizeClassFrontEnd(props, block, attributes) {
-	if ( block.name !== 'core/heading' ) {
+	if ( block.name !== 'core/heading' && block.name !== 'core/post-title' ) {
 		return props;
 	}
 	const { className } = props;
 	const { hasRule, hasTopMargin } = attributes;
 	return assign({}, props, {
-		className: classnames(className, {'has-green-underline' : hasRule}, {'has-top-margin' : hasTopMargin} ),
+		className: classnames(
+			className,
+			{ 'has-green-underline' : hasRule },
+			{ 'has-top-margin' : hasTopMargin }
+		),
 	});
 }
 

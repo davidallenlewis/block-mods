@@ -37,16 +37,20 @@ add_action( 'enqueue_block_editor_assets', __NAMESPACE__ . '\editor_assets' );
 function add_post_title_class( $block_content = '', $block = [] ) {
 	if ( isset( $block['blockName'] ) && 'core/post-title' === $block['blockName'] ) {
 		
-		$defaults = ['hasRule' => false, 'hasTopMargin' => false];
-		
+		$defaults = [
+			'level' => 2,
+			'hasRule' => true,
+			'hasTopMargin' => false
+		];
 		$args = wp_parse_args( $block['attrs'], $defaults );
 		
-		$has_green_underline = $args && array_key_exists('hasRule', $args) ? ' has-green-underline ' : ' ' ;
-		$has_top_margin = $args && array_key_exists('hasTopMargin', $args) ? ' has-top-margin ' : ' ' ;
+		$has_green_underline = $args && array_key_exists('hasRule', $args) && $args['hasRule'] === true ? ' has-green-underline ' : ' ' ;
+		$has_top_margin = $args && array_key_exists('hasTopMargin', $args) && $args['hasTopMargin'] === true ? ' has-top-margin ' : ' ' ;
 		
 		$html = str_replace(
 			'<h' . $args['level'] . ' class="wp-block-post-title',
-			'<h' . $args['level'] . ' class="wp-block-post-title ' . $has_green_underline . $has_top_margin,
+			'<h' . $args['level'] . ' class="wp-block-post-title ' . $has_green_underline,
+			//'<h' . $args['level'] . ' class="wp-block-post-title ' . $has_green_underline . $has_top_margin,
 			$block_content
 		);
 		return $html;
