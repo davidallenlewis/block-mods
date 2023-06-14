@@ -50,7 +50,6 @@ function add_post_title_class( $block_content = '', $block = [] ) {
 		$html = str_replace(
 			'<h' . $args['level'] . ' class="wp-block-post-title',
 			'<h' . $args['level'] . ' class="wp-block-post-title ' . $has_green_underline,
-			//'<h' . $args['level'] . ' class="wp-block-post-title ' . $has_green_underline . $has_top_margin,
 			$block_content
 		);
 		return $html;

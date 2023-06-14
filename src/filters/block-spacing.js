@@ -160,20 +160,21 @@ addFilter(
  * @return {Object}            Filtered props applied to save element.
  */
 function addSizeClassFrontEnd(props, block, attributes) {
-	if ( block.name !== 'core/group' && block.name !== 'core/cover' && block.name !== 'core/columns' && block.name !== 'core/media-text' ) {
-		return props;
-	}
 	const { className } = props;
 	const { hasOuterSpacing, hasInnerSpacing, hasRainbowSeparatorTop, hasRainbowSeparatorBottom } = attributes;
-	return assign({}, props, {
-		className: classnames(
-			className,
-			{ 'has-inner-spacing' : hasInnerSpacing },
-			{ 'has-outer-spacing' : hasOuterSpacing },
-			{ 'has-rainbow-separator has-rainbow-separator--top' : hasRainbowSeparatorTop },
-			{ 'has-rainbow-separator has-rainbow-separator--bottom' : hasRainbowSeparatorBottom }
-		),
-	});
+	if ( block.name === 'core/group' && block.name === 'core/cover' && block.name === 'core/columns' && block.name === 'core/media-text' ) {
+		return assign({}, props, {
+			className: classnames(
+				className,
+				{ 'has-inner-spacing' : hasInnerSpacing },
+				{ 'has-outer-spacing' : hasOuterSpacing },
+				{ 'has-rainbow-separator has-rainbow-separator--top' : hasRainbowSeparatorTop },
+				{ 'has-rainbow-separator has-rainbow-separator--bottom' : hasRainbowSeparatorBottom }
+			),
+		});
+	} else {
+		return props;
+	}
 }
 
 // Comment out to test the PHP approach defined in block-mods.php

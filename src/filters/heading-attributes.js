@@ -128,18 +128,19 @@ addFilter(
  * @return {Object}            Filtered props applied to save element
  */
 function addSizeClassFrontEnd(props, block, attributes) {
-	if ( block.name !== 'core/heading' && block.name !== 'core/post-title' ) {
-		return props;
-	}
 	const { className } = props;
 	const { hasRule, hasTopMargin } = attributes;
-	return assign({}, props, {
-		className: classnames(
-			className,
-			{ 'has-green-underline' : hasRule },
-			{ 'has-top-margin' : hasTopMargin }
-		),
-	});
+	if ( block.name === 'core/heading' && block.name === 'core/post-title' ) {
+		return assign({}, props, {
+			className: classnames(
+				className,
+				{ 'has-green-underline' : hasRule },
+				{ 'has-top-margin' : hasTopMargin }
+			),
+		});
+	} else {
+		return props;
+	}
 }
 
 // Comment out to test the PHP approach defined in block-mods.php
