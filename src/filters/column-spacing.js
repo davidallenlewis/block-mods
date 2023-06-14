@@ -112,14 +112,15 @@ addFilter(
  * @return {Object}            Filtered props applied to save element.
  */
 function addSizeClassFrontEnd(props, block, attributes) {
-	if ( block.name !== 'core/column' ) {
-		return props;
-	}
 	const { className } = props;
 	const { hasInnerSpacing } = attributes;
-	return assign({}, props, {
-		className: classnames(className, { 'has-inner-spacing' : hasInnerSpacing } ),
-	});
+	if ( block.name === 'core/column' ) {
+		return assign({}, props, {
+			className: classnames(className, { 'has-inner-spacing' : hasInnerSpacing } ),
+		});
+	} else {
+		return props;
+	}
 }
 
 // Comment out to test the PHP approach defined in block-mods.php

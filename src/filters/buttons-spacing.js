@@ -127,14 +127,15 @@ addFilter(
  * @return {Object}            Filtered props applied to save element.
  */
 function addPaddingClassFrontEnd(props, block, attributes) {
-	if ( block.name !== 'core/buttons' ) {
-		return props;
-	}
 	const { className } = props;
 	const { spaceAbove, spaceBelow } = attributes;
-	return assign({}, props, {
-		className: classnames(className, { 'has-space-above--md' : spaceAbove }, { 'has-space-below--md' : spaceBelow } ),
-	});
+	if ( block.name === 'core/buttons' ) {
+		return assign({}, props, {
+			className: classnames(className, { 'has-space-above--md' : spaceAbove }, { 'has-space-below--md' : spaceBelow } ),
+		});
+	} else {
+		return props;
+	}
 }
 addFilter(
 	'blocks.getSaveContent.extraProps',

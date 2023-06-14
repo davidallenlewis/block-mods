@@ -119,14 +119,15 @@ addFilter(
  * @return {Object}            Filtered props applied to save element.
  */
 function addSizeClassFrontEnd(props, block, attributes) {
-	if ( block.name !== 'core/button' ) {
-		return props;
-	}
 	const { className } = props;
 	const { size } = attributes;
-	return assign({}, props, {
-		className: classnames(className, { [`has-size-${size}`] : size } ),
-	});
+	if ( block.name === 'core/button' ) {
+		return assign({}, props, {
+			className: classnames(className, { [`has-size-${size}`] : size } ),
+		});
+	} else {
+		return props;
+	}
 }
 
 // Comment out to test the PHP approach defined in block-mods.php

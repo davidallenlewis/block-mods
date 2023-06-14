@@ -127,14 +127,15 @@ addFilter(
  * @return {Object}            Filtered props applied to save element.
  */
 function addPaddingClassFrontEnd(props, block, attributes) {
-	if ( block.name !== 'core/columns' ) {
-		return props;
-	}
 	const { className } = props;
 	const { flushLeft, flushRight } = attributes;
-	return assign({}, props, {
-		className: classnames(className, { 'is-flush-left' : flushLeft }, { 'is-flush-right' : flushRight } ),
-	});
+	if ( block.name === 'core/columns' ) {
+		return assign({}, props, {
+			className: classnames(className, { 'is-flush-left' : flushLeft }, { 'is-flush-right' : flushRight } ),
+		});
+	} else {
+		return props;
+	}
 }
 addFilter(
 	'blocks.getSaveContent.extraProps',

@@ -79,14 +79,15 @@ addFilter(
  * @return {Object}            Filtered props applied to save element.
  */
 function addSizeClassFrontEnd(props, block, attributes) {
-	if ( block.name !== 'core/image' && block.name !== 'core/video' && block.name !== 'core/embed' && block.name !== 'core/media-text' ) {
-		return props;
-	}
 	const { className } = props;
 	const { gradient, backgroundColor } = attributes;
-	return assign({}, props, {
-		className: classnames(className, { [`has-${gradient}-gradient-background`] : gradient }, { [`has-${backgroundColor}-background-color`] : backgroundColor } ),
-	});
+	if ( block.name === 'core/image' && block.name === 'core/video' && block.name === 'core/embed' && block.name === 'core/media-text' ) {
+		return assign({}, props, {
+			className: classnames(className, { [`has-${gradient}-gradient-background`] : gradient }, { [`has-${backgroundColor}-background-color`] : backgroundColor } ),
+		});
+	} else {
+		return props;
+	}
 }
 
 // Comment out to test the PHP approach defined in block-mods.php
