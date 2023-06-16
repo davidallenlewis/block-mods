@@ -130,7 +130,7 @@ addFilter(
 function addSizeClassFrontEnd(props, block, attributes) {
 	const { className } = props;
 	const { hasRule, hasTopMargin } = attributes;
-	if ( block.name === 'core/heading' && block.name === 'core/post-title' ) {
+	if ( block.name === 'core/heading' || block.name === 'core/post-title' ) {
 		return assign({}, props, {
 			className: classnames(
 				className,

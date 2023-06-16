@@ -81,7 +81,7 @@ addFilter(
 function addSizeClassFrontEnd(props, block, attributes) {
 	const { className } = props;
 	const { gradient, backgroundColor } = attributes;
-	if ( block.name === 'core/image' && block.name === 'core/video' && block.name === 'core/embed' && block.name === 'core/media-text' ) {
+	if ( block.name === 'core/image' || block.name === 'core/video' || block.name === 'core/embed' || block.name === 'core/media-text' ) {
 		return assign({}, props, {
 			className: classnames(className, { [`has-${gradient}-gradient-background`] : gradient }, { [`has-${backgroundColor}-background-color`] : backgroundColor } ),
 		});
