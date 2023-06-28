@@ -129,8 +129,6 @@ function addSizeClassFrontEnd(props, block, attributes) {
 		return props;
 	}
 }
-
-// Comment out to test the PHP approach defined in block-mods.php
 addFilter(
 	'blocks.getSaveContent.extraProps',
 	'block-mods/button-block/add-size-class-public',

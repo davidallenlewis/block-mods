@@ -122,8 +122,6 @@ function addSizeClassFrontEnd(props, block, attributes) {
 		return props;
 	}
 }
-
-// Comment out to test the PHP approach defined in block-mods.php
 addFilter(
 	'blocks.getSaveContent.extraProps',
 	'block-mods/column-block/add-spacing-classes-public',

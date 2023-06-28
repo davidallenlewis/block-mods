@@ -162,7 +162,7 @@ addFilter(
 function addSizeClassFrontEnd(props, block, attributes) {
 	const { className } = props;
 	const { hasOuterSpacing, hasInnerSpacing, hasRainbowSeparatorTop, hasRainbowSeparatorBottom } = attributes;
-	if ( block.name === 'core/group' && block.name === 'core/cover' && block.name === 'core/columns' && block.name === 'core/media-text' ) {
+	if ( block.name === 'core/group' || block.name === 'core/cover' || block.name === 'core/columns' || block.name === 'core/media-text' ) {
 		return assign({}, props, {
 			className: classnames(
 				className,
@@ -176,8 +176,6 @@ function addSizeClassFrontEnd(props, block, attributes) {
 		return props;
 	}
 }
-
-// Comment out to test the PHP approach defined in block-mods.php
 addFilter(
 	'blocks.getSaveContent.extraProps',
 	'block-mods/multiple-blocks/add-spacing-classes-public',

@@ -14,8 +14,7 @@ const { PanelBody, SelectControl } = wp.components;
  * Add padding attributes to Column block
  *
  * @param  {Object} settings Original block settings
- * @param  {stri
- ng} name     Block name
+ * @param  {string} name     Block name
  * @return {Object}          Filtered block settings
  */
 function addAttributes(settings, name) {
