@@ -69,7 +69,6 @@ addFilter(
 	addBackgroundColorClassEditor,
 );
 
-
 /**
  * Add class to the block on the front end / html markup
  *
